@@ -11,7 +11,7 @@ Note : Please Follow the below guidelines to create task folders
 
 | Task No| Task Name | Details |
 |-|-|-|
-|1|         |         |
+|1|Scrapping from Websites | Posts concerning and related to our tasks were scrapped from some websites and and collected in a csv file|
 |2|         |         |
 |3|         |         |
 |4|         |         |
