@@ -12,7 +12,7 @@ Note : Please Follow the below guidelines to create task folders
 | Task No| Task Name | Details |
 |-|-|-|
 |1|Scrapping from Websites | Posts concerning and related to our tasks were scrapped from some websites and and collected in a csv file|
-|2|         |         |
+|2|Preprocessing scraped data | Data scarped from the internet will be prepared for machine learning and the final result will be stored as a CSV file|
 |3|         |         |
 |4|         |         |
 |5|Political Rationale| The entire basis of the political rationale is to create a document upon which we could use as a basis to know if the direction of our current application is viable or not|
