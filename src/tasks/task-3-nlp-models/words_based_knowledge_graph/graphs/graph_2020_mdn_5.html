@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "announce", "label": "announce", "shape": "dot"}, {"color": "#97c2fc", "id": "begin", "label": "begin", "shape": "dot"}, {"color": "#97c2fc", "id": "bleed", "label": "bleed", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroon", "label": "cameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "carry", "label": "carry", "shape": "dot"}, {"color": "#97c2fc", "id": "commit", "label": "commit", "shape": "dot"}, {"color": "#97c2fc", "id": "continue", "label": "continue", "shape": "dot"}, {"color": "#97c2fc", "id": "declare", "label": "declare", "shape": "dot"}, {"color": "#97c2fc", "id": "describe", "label": "describe", "shape": "dot"}, {"color": "#97c2fc", "id": "ensue", "label": "ensue", "shape": "dot"}, {"color": "#97c2fc", "id": "escalate", "label": "escalate", "shape": "dot"}, {"color": "#97c2fc", "id": "face", "label": "face", "shape": "dot"}, {"color": "#97c2fc", "id": "feel", "label": "feel", "shape": "dot"}, {"color": "#97c2fc", "id": "fight", "label": "fight", "shape": "dot"}, {"color": "#97c2fc", "id": "hold", "label": "hold", "shape": "dot"}, {"color": "#97c2fc", "id": "identify", "label": "identify", "shape": "dot"}, {"color": "#97c2fc", "id": "illustrate", "label": "illustrate", "shape": "dot"}, {"color": "#97c2fc", "id": "kill", "label": "kill", "shape": "dot"}, {"color": "#97c2fc", "id": "lead", "label": "lead", "shape": "dot"}, {"color": "#97c2fc", "id": "make", "label": "make", "shape": "dot"}, {"color": "#97c2fc", "id": "maverickjournalist", "label": "maverickjournalist", "shape": "dot"}, {"color": "#97c2fc", "id": "nbuy", "label": "nbuy", "shape": "dot"}, {"color": "#97c2fc", "id": "proclaim", "label": "proclaim", "shape": "dot"}, {"color": "#97c2fc", "id": "protest", "label": "protest", "shape": "dot"}, {"color": "#97c2fc", "id": "say", "label": "say", "shape": "dot"}, {"color": "#97c2fc", "id": "separatist", "label": "separatist", "shape": "dot"}, {"color": "#97c2fc", "id": "show", "label": "show", "shape": "dot"}, {"color": "#97c2fc", "id": "spend", "label": "spend", "shape": "dot"}, {"color": "#97c2fc", "id": "try", "label": "try", "shape": "dot"}, {"color": "#97c2fc", "id": "use", "label": "use", "shape": "dot"}, {"color": "#97c2fc", "id": "wasdivide", "label": "wasdivide", "shape": "dot"}, {"color": "#97c2fc", "id": "biya", "label": "biya", "shape": "dot"}, {"color": "#97c2fc", "id": "abuse", "label": "abuse", "shape": "dot"}, {"color": "#97c2fc", "id": "assistance", "label": "assistance", "shape": "dot"}, {"color": "#97c2fc", "id": "attention", "label": "attention", "shape": "dot"}, {"color": "#97c2fc", "id": "ceasefire", "label": "ceasefire", "shape": "dot"}, {"color": "#97c2fc", "id": "civilian", "label": "civilian", "shape": "dot"}, {"color": "#97c2fc", "id": "comment", "label": "comment", "shape": "dot"}, {"color": "#97c2fc", "id": "conflict", "label": "conflict", "shape": "dot"}, {"color": "#97c2fc", "id": "crisis", "label": "crisis", "shape": "dot"}, {"color": "#97c2fc", "id": "criticism", "label": "criticism", "shape": "dot"}, {"color": "#97c2fc", "id": "election", "label": "election", "shape": "dot"}, {"color": "#97c2fc", "id": "hospital", "label": "hospital", "shape": "dot"}, {"color": "#97c2fc", "id": "hostage", "label": "hostage", "shape": "dot"}, {"color": "#97c2fc", "id": "immigrant", "label": "immigrant", "shape": "dot"}, {"color": "#97c2fc", "id": "impact", "label": "impact", "shape": "dot"}, {"color": "#97c2fc", "id": "inbox", "label": "inbox", "shape": "dot"}, {"color": "#97c2fc", "id": "info", "label": "info", "shape": "dot"}, {"color": "#97c2fc", "id": "issue", "label": "issue", "shape": "dot"}, {"color": "#97c2fc", "id": "matter", "label": "matter", "shape": "dot"}, {"color": "#97c2fc", "id": "news", "label": "news", "shape": "dot"}, {"color": "#97c2fc", "id": "number", "label": "number", "shape": "dot"}, {"color": "#97c2fc", "id": "people", "label": "people", "shape": "dot"}, {"color": "#97c2fc", "id": "plantain", "label": "plantain", "shape": "dot"}, {"color": "#97c2fc", "id": "president", "label": "president", "shape": "dot"}, {"color": "#97c2fc", "id": "region", "label": "region", "shape": "dot"}, {"color": "#97c2fc", "id": "saint", "label": "saint", "shape": "dot"}, {"color": "#97c2fc", "id": "son", "label": "son", "shape": "dot"}, {"color": "#97c2fc", "id": "tremor", "label": "tremor", "shape": "dot"}, {"color": "#97c2fc", "id": "trump", "label": "trump", "shape": "dot"}, {"color": "#97c2fc", "id": "watch", "label": "watch", "shape": "dot"}, {"color": "#97c2fc", "id": "access", "label": "access", "shape": "dot"}, {"color": "#97c2fc", "id": "anglophone", "label": "anglophone", "shape": "dot"}, {"color": "#97c2fc", "id": "attack", "label": "attack", "shape": "dot"}, {"color": "#97c2fc", "id": "believe", "label": "believe", "shape": "dot"}, {"color": "#97c2fc", "id": "claim", "label": "claim", "shape": "dot"}, {"color": "#97c2fc", "id": "close", "label": "close", "shape": "dot"}, {"color": "#97c2fc", "id": "condemn", "label": "condemn", "shape": "dot"}, {"color": "#97c2fc", "id": "crossrefn", "label": "crossrefn", "shape": "dot"}, {"color": "#97c2fc", "id": "devolve", "label": "devolve", "shape": "dot"}, {"color": "#97c2fc", "id": "division", "label": "division", "shape": "dot"}, {"color": "#97c2fc", "id": "erudef", "label": "erudef", "shape": "dot"}, {"color": "#97c2fc", "id": "erupt", "label": "erupt", "shape": "dot"}, {"color": "#97c2fc", "id": "explain", "label": "explain", "shape": "dot"}, {"color": "#97c2fc", "id": "focus", "label": "focus", "shape": "dot"}, {"color": "#97c2fc", "id": "grab", "label": "grab", "shape": "dot"}, {"color": "#97c2fc", "id": "organize", "label": "organize", "shape": "dot"}, {"color": "#97c2fc", "id": "read", "label": "read", "shape": "dot"}, {"color": "#97c2fc", "id": "take", "label": "take", "shape": "dot"}, {"color": "#97c2fc", "id": "turn", "label": "turn", "shape": "dot"}, {"color": "#97c2fc", "id": "violence", "label": "violence", "shape": "dot"}, {"color": "#97c2fc", "id": "area", "label": "area", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroonian", "label": "cameroonian", "shape": "dot"}, {"color": "#97c2fc", "id": "condition", "label": "condition", "shape": "dot"}, {"color": "#97c2fc", "id": "dialogue", "label": "dialogue", "shape": "dot"}, {"color": "#97c2fc", "id": "experience", "label": "experience", "shape": "dot"}, {"color": "#97c2fc", "id": "force", "label": "force", "shape": "dot"}, {"color": "#97c2fc", "id": "government", "label": "government", "shape": "dot"}, {"color": "#97c2fc", "id": "initiative", "label": "initiative", "shape": "dot"}, {"color": "#97c2fc", "id": "leader", "label": "leader", "shape": "dot"}, {"color": "#97c2fc", "id": "system", "label": "system", "shape": "dot"}, {"color": "#97c2fc", "id": "thencrisis", "label": "thencrisis", "shape": "dot"}, {"color": "#97c2fc", "id": "woman", "label": "woman", "shape": "dot"}, {"color": "#97c2fc", "id": "x93", "label": "x93", "shape": "dot"}, {"color": "#97c2fc", "id": "include", "label": "include", "shape": "dot"}, {"color": "#97c2fc", "id": "child", "label": "child", "shape": "dot"}, {"color": "#97c2fc", "id": "distribution", "label": "distribution", "shape": "dot"}, {"color": "#97c2fc", "id": "fighter", "label": "fighter", "shape": "dot"}, {"color": "#97c2fc", "id": "group", "label": "group", "shape": "dot"}, {"color": "#97c2fc", "id": "militant", "label": "militant", "shape": "dot"}, {"color": "#97c2fc", "id": "organisation", "label": "organisation", "shape": "dot"}, {"color": "#97c2fc", "id": "place", "label": "place", "shape": "dot"}, {"color": "#97c2fc", "id": "procedure", "label": "procedure", "shape": "dot"}, {"color": "#97c2fc", "id": "video", "label": "video", "shape": "dot"}, {"color": "#97c2fc", "id": "agree", "label": "agree", "shape": "dot"}, {"color": "#97c2fc", "id": "come", "label": "come", "shape": "dot"}, {"color": "#97c2fc", "id": "get", "label": "get", "shape": "dot"}, {"color": "#97c2fc", "id": "govern", "label": "govern", "shape": "dot"}, {"color": "#97c2fc", "id": "meet", "label": "meet", "shape": "dot"}, {"color": "#97c2fc", "id": "parallel", "label": "parallel", "shape": "dot"}, {"color": "#97c2fc", "id": "raise", "label": "raise", "shape": "dot"}, {"color": "#97c2fc", "id": "survive", "label": "survive", "shape": "dot"}, {"color": "#97c2fc", "id": "tell", "label": "tell", "shape": "dot"}, {"color": "#97c2fc", "id": "x94", "label": "x94", "shape": "dot"}, {"color": "#97c2fc", "id": "deficit", "label": "deficit", "shape": "dot"}, {"color": "#97c2fc", "id": "effort", "label": "effort", "shape": "dot"}, {"color": "#97c2fc", "id": "grievance", "label": "grievance", "shape": "dot"}, {"color": "#97c2fc", "id": "panic", "label": "panic", "shape": "dot"}, {"color": "#97c2fc", "id": "tension", "label": "tension", "shape": "dot"}, {"color": "#97c2fc", "id": "account", "label": "account", "shape": "dot"}, {"color": "#97c2fc", "id": "country", "label": "country", "shape": "dot"}, {"color": "#97c2fc", "id": "governance", "label": "governance", "shape": "dot"}, {"color": "#97c2fc", "id": "partner", "label": "partner", "shape": "dot"}, {"color": "#97c2fc", "id": "call", "label": "call", "shape": "dot"}, {"color": "#97c2fc", "id": "fail", "label": "fail", "shape": "dot"}, {"color": "#97c2fc", "id": "refer", "label": "refer", "shape": "dot"}, {"color": "#97c2fc", "id": "result", "label": "result", "shape": "dot"}, {"color": "#97c2fc", "id": "un", "label": "un", "shape": "dot"}, {"color": "#97c2fc", "id": "official", "label": "official", "shape": "dot"}, {"color": "#97c2fc", "id": "arrest", "label": "arrest", "shape": "dot"}, {"color": "#97c2fc", "id": "atrocity", "label": "atrocity", "shape": "dot"}, {"color": "#97c2fc", "id": "charge", "label": "charge", "shape": "dot"}, {"color": "#97c2fc", "id": "demonstration", "label": "demonstration", "shape": "dot"}, {"color": "#97c2fc", "id": "power", "label": "power", "shape": "dot"}, {"color": "#97c2fc", "id": "affair", "label": "affair", "shape": "dot"}, {"color": "#97c2fc", "id": "awareness", "label": "awareness", "shape": "dot"}, {"color": "#97c2fc", "id": "community", "label": "community", "shape": "dot"}, {"color": "#97c2fc", "id": "precedent", "label": "precedent", "shape": "dot"}, {"color": "#97c2fc", "id": "schoolchildren", "label": "schoolchildren", "shape": "dot"}, {"color": "#97c2fc", "id": "population", "label": "population", "shape": "dot"}, {"color": "#97c2fc", "id": "process", "label": "process", "shape": "dot"}, {"color": "#97c2fc", "id": "vulnerability", "label": "vulnerability", "shape": "dot"}, {"color": "#97c2fc", "id": "need", "label": "need", "shape": "dot"}, {"color": "#97c2fc", "id": "argue", "label": "argue", "shape": "dot"}, {"color": "#97c2fc", "id": "emerge", "label": "emerge", "shape": "dot"}, {"color": "#97c2fc", "id": "ig", "label": "ig", "shape": "dot"}, {"color": "#97c2fc", "id": "estimate", "label": "estimate", "shape": "dot"}, {"color": "#97c2fc", "id": "warn", "label": "warn", "shape": "dot"}, {"color": "#97c2fc", "id": "movement", "label": "movement", "shape": "dot"}, {"color": "#97c2fc", "id": "affect", "label": "affect", "shape": "dot"}, {"color": "#97c2fc", "id": "age", "label": "age", "shape": "dot"}, {"color": "#97c2fc", "id": "benefit", "label": "benefit", "shape": "dot"}, {"color": "#97c2fc", "id": "destroy", "label": "destroy", "shape": "dot"}, {"color": "#97c2fc", "id": "express", "label": "express", "shape": "dot"}, {"color": "#97c2fc", "id": "flee", "label": "flee", "shape": "dot"}, {"color": "#97c2fc", "id": "nwsw", "label": "nwsw", "shape": "dot"}, {"color": "#97c2fc", "id": "returnee", "label": "returnee", "shape": "dot"}, {"color": "#97c2fc", "id": "share", "label": "share", "shape": "dot"}, {"color": "#97c2fc", "id": "highlights", "label": "highlights", "shape": "dot"}, {"color": "#97c2fc", "id": "bar", "label": "bar", "shape": "dot"}, {"color": "#97c2fc", "id": "izobo", "label": "izobo", "shape": "dot"}, {"color": "#97c2fc", "id": "protect", "label": "protect", "shape": "dot"}, {"color": "#97c2fc", "id": "start", "label": "start", "shape": "dot"}, {"color": "#97c2fc", "id": "mary", "label": "mary", "shape": "dot"}, {"color": "#97c2fc", "id": "general", "label": "general", "shape": "dot"}, {"color": "#97c2fc", "id": "follow", "label": "follow", "shape": "dot"}, {"color": "#97c2fc", "id": "intensify", "label": "intensify", "shape": "dot"}, {"color": "#97c2fc", "id": "rampage", "label": "rampage", "shape": "dot"}, {"color": "#97c2fc", "id": "yaound", "label": "yaound", "shape": "dot"}, {"color": "#97c2fc", "id": "law", "label": "law", "shape": "dot"}, {"color": "#97c2fc", "id": "representation", "label": "representation", "shape": "dot"}, {"color": "#97c2fc", "id": "southwest", "label": "southwest", "shape": "dot"}, {"color": "#97c2fc", "id": "word", "label": "word", "shape": "dot"}, {"color": "#97c2fc", "id": "africa", "label": "africa", "shape": "dot"}, {"color": "#97c2fc", "id": "investigate", "label": "investigate", "shape": "dot"}, {"color": "#97c2fc", "id": "stalemate", "label": "stalemate", "shape": "dot"}, {"color": "#97c2fc", "id": "approach", "label": "approach", "shape": "dot"}, {"color": "#97c2fc", "id": "organization", "label": "organization", "shape": "dot"}, {"color": "#97c2fc", "id": "report", "label": "report", "shape": "dot"}, {"color": "#97c2fc", "id": "recognize", "label": "recognize", "shape": "dot"}, {"color": "#97c2fc", "id": "diplomat", "label": "diplomat", "shape": "dot"}, {"color": "#97c2fc", "id": "accusation", "label": "accusation", "shape": "dot"}, {"color": "#97c2fc", "id": "girl", "label": "girl", "shape": "dot"}, {"color": "#97c2fc", "id": "become", "label": "become", "shape": "dot"}, {"color": "#97c2fc", "id": "s", "label": "s", "shape": "dot"}, {"color": "#97c2fc", "id": "speech", "label": "speech", "shape": "dot"}, {"color": "#97c2fc", "id": "centre", "label": "centre", "shape": "dot"}, {"color": "#97c2fc", "id": "consider", "label": "consider", "shape": "dot"}, {"color": "#97c2fc", "id": "recognise", "label": "recognise", "shape": "dot"}, {"color": "#97c2fc", "id": "cambridge", "label": "cambridge", "shape": "dot"}, {"color": "#97c2fc", "id": "massacre", "label": "massacre", "shape": "dot"}, {"color": "#97c2fc", "id": "term", "label": "term", "shape": "dot"}, {"color": "#97c2fc", "id": "accuse", "label": "accuse", "shape": "dot"}, {"color": "#97c2fc", "id": "displace", "label": "displace", "shape": "dot"}, {"color": "#97c2fc", "id": "engage", "label": "engage", "shape": "dot"}, {"color": "#97c2fc", "id": "reunite", "label": "reunite", "shape": "dot"}, {"color": "#97c2fc", "id": "particular", "label": "particular", "shape": "dot"}, {"color": "#97c2fc", "id": "education", "label": "education", "shape": "dot"}, {"color": "#97c2fc", "id": "malnutrition", "label": "malnutrition", "shape": "dot"}, {"color": "#97c2fc", "id": "service", "label": "service", "shape": "dot"}, {"color": "#97c2fc", "id": "release", "label": "release", "shape": "dot"}, {"color": "#97c2fc", "id": "ilaria", "label": "ilaria", "shape": "dot"}, {"color": "#97c2fc", "id": "deserve", "label": "deserve", "shape": "dot"}, {"color": "#97c2fc", "id": "year", "label": "year", "shape": "dot"}, {"color": "#97c2fc", "id": "see", "label": "see", "shape": "dot"}, {"color": "#97c2fc", "id": "kamto", "label": "kamto", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "biya", "to": "announce", "width": 2}, {"from": "biya", "to": "begin", "width": 1}, {"from": "biya", "to": "bleed", "width": 1}, {"from": "biya", "to": "cameroon", "width": 7}, {"from": "biya", "to": "carry", "width": 1}, {"from": "biya", "to": "commit", "width": 1}, {"from": "biya", "to": "continue", "width": 3}, {"from": "biya", "to": "declare", "width": 1}, {"from": "biya", "to": "describe", "width": 3}, {"from": "biya", "to": "ensue", "width": 3}, {"from": "biya", "to": "escalate", "width": 1}, {"from": "biya", "to": "face", "width": 1}, {"from": "biya", "to": "feel", "width": 1}, {"from": "biya", "to": "fight", "width": 1}, {"from": "biya", "to": "hold", "width": 1}, {"from": "biya", "to": "identify", "width": 1}, {"from": "biya", "to": "illustrate", "width": 1}, {"from": "biya", "to": "kill", "width": 4}, {"from": "biya", "to": "lead", "width": 1}, {"from": "biya", "to": "make", "width": 1}, {"from": "biya", "to": "maverickjournalist", "width": 2}, {"from": "biya", "to": "nbuy", "width": 1}, {"from": "biya", "to": "proclaim", "width": 3}, {"from": "biya", "to": "protest", "width": 2}, {"from": "biya", "to": "say", "width": 5}, {"from": "biya", "to": "separatist", "width": 1}, {"from": "biya", "to": "show", "width": 1}, {"from": "biya", "to": "spend", "width": 4}, {"from": "biya", "to": "try", "width": 1}, {"from": "biya", "to": "use", "width": 1}, {"from": "biya", "to": "wasdivide", "width": 1}, {"from": "say", "to": "abuse", "width": 1}, {"from": "say", "to": "assistance", "width": 2}, {"from": "say", "to": "attention", "width": 1}, {"from": "say", "to": "cameroon", "width": 4}, {"from": "say", "to": "ceasefire", "width": 1}, {"from": "say", "to": "civilian", "width": 2}, {"from": "say", "to": "comment", "width": 1}, {"from": "say", "to": "conflict", "width": 11}, {"from": "say", "to": "crisis", "width": 2}, {"from": "say", "to": "criticism", "width": 2}, {"from": "say", "to": "election", "width": 1}, {"from": "say", "to": "hospital", "width": 1}, {"from": "say", "to": "hostage", "width": 1}, {"from": "say", "to": "immigrant", "width": 2}, {"from": "say", "to": "impact", "width": 2}, {"from": "say", "to": "inbox", "width": 1}, {"from": "say", "to": "info", "width": 1}, {"from": "say", "to": "issue", "width": 9}, {"from": "say", "to": "matter", "width": 3}, {"from": "say", "to": "news", "width": 1}, {"from": "say", "to": "number", "width": 3}, {"from": "say", "to": "people", "width": 4}, {"from": "say", "to": "plantain", "width": 1}, {"from": "say", "to": "president", "width": 2}, {"from": "say", "to": "region", "width": 3}, {"from": "say", "to": "saint", "width": 1}, {"from": "say", "to": "separatist", "width": 2}, {"from": "say", "to": "son", "width": 1}, {"from": "say", "to": "tremor", "width": 1}, {"from": "say", "to": "trump", "width": 3}, {"from": "say", "to": "watch", "width": 2}, {"from": "cameroon", "to": "access", "width": 2}, {"from": "cameroon", "to": "anglophone", "width": 3}, {"from": "cameroon", "to": "attack", "width": 5}, {"from": "cameroon", "to": "believe", "width": 1}, {"from": "cameroon", "to": "cameroon", "width": 24}, {"from": "cameroon", "to": "claim", "width": 5}, {"from": "cameroon", "to": "close", "width": 3}, {"from": "cameroon", "to": "condemn", "width": 1}, {"from": "cameroon", "to": "conflict", "width": 2}, {"from": "cameroon", "to": "continue", "width": 1}, {"from": "cameroon", "to": "crisis", "width": 1}, {"from": "cameroon", "to": "crossrefn", "width": 2}, {"from": "cameroon", "to": "devolve", "width": 2}, {"from": "cameroon", "to": "division", "width": 1}, {"from": "cameroon", "to": "erudef", "width": 1}, {"from": "cameroon", "to": "erupt", "width": 2}, {"from": "cameroon", "to": "explain", "width": 5}, {"from": "cameroon", "to": "focus", "width": 2}, {"from": "cameroon", "to": "grab", "width": 1}, {"from": "cameroon", "to": "make", "width": 1}, {"from": "cameroon", "to": "organize", "width": 1}, {"from": "cameroon", "to": "read", "width": 6}, {"from": "cameroon", "to": "region", "width": 1}, {"from": "cameroon", "to": "take", "width": 2}, {"from": "cameroon", "to": "turn", "width": 7}, {"from": "cameroon", "to": "violence", "width": 1}, {"from": "include", "to": "area", "width": 4}, {"from": "include", "to": "cameroon", "width": 6}, {"from": "include", "to": "cameroonian", "width": 1}, {"from": "include", "to": "condition", "width": 1}, {"from": "include", "to": "conflict", "width": 1}, {"from": "include", "to": "crisis", "width": 5}, {"from": "include", "to": "dialogue", "width": 1}, {"from": "include", "to": "division", "width": 6}, {"from": "include", "to": "experience", "width": 1}, {"from": "include", "to": "force", "width": 3}, {"from": "include", "to": "government", "width": 2}, {"from": "include", "to": "initiative", "width": 1}, {"from": "include", "to": "leader", "width": 3}, {"from": "include", "to": "people", "width": 5}, {"from": "include", "to": "region", "width": 5}, {"from": "include", "to": "system", "width": 2}, {"from": "include", "to": "thencrisis", "width": 1}, {"from": "include", "to": "violence", "width": 2}, {"from": "include", "to": "woman", "width": 1}, {"from": "include", "to": "x93", "width": 2}, {"from": "read", "to": "assistance", "width": 1}, {"from": "read", "to": "ceasefire", "width": 1}, {"from": "read", "to": "child", "width": 1}, {"from": "read", "to": "conflict", "width": 12}, {"from": "read", "to": "crisis", "width": 3}, {"from": "read", "to": "distribution", "width": 1}, {"from": "read", "to": "fighter", "width": 1}, {"from": "read", "to": "force", "width": 3}, {"from": "read", "to": "government", "width": 1}, {"from": "read", "to": "group", "width": 4}, {"from": "read", "to": "militant", "width": 1}, {"from": "read", "to": "organisation", "width": 2}, {"from": "read", "to": "people", "width": 3}, {"from": "read", "to": "place", "width": 1}, {"from": "read", "to": "procedure", "width": 1}, {"from": "read", "to": "region", "width": 1}, {"from": "read", "to": "separatist", "width": 2}, {"from": "read", "to": "video", "width": 1}, {"from": "x94", "to": "agree", "width": 1}, {"from": "x94", "to": "cameroon", "width": 1}, {"from": "x94", "to": "come", "width": 2}, {"from": "x94", "to": "force", "width": 3}, {"from": "x94", "to": "get", "width": 2}, {"from": "x94", "to": "govern", "width": 1}, {"from": "x94", "to": "hold", "width": 4}, {"from": "x94", "to": "meet", "width": 1}, {"from": "x94", "to": "parallel", "width": 9}, {"from": "x94", "to": "raise", "width": 3}, {"from": "x94", "to": "read", "width": 9}, {"from": "x94", "to": "separatist", "width": 3}, {"from": "x94", "to": "survive", "width": 2}, {"from": "x94", "to": "take", "width": 1}, {"from": "x94", "to": "tell", "width": 1}, {"from": "take", "to": "deficit", "width": 1}, {"from": "take", "to": "effort", "width": 1}, {"from": "take", "to": "election", "width": 1}, {"from": "take", "to": "grievance", "width": 3}, {"from": "take", "to": "group", "width": 4}, {"from": "take", "to": "initiative", "width": 1}, {"from": "take", "to": "leader", "width": 2}, {"from": "take", "to": "panic", "width": 1}, {"from": "take", "to": "people", "width": 1}, {"from": "take", "to": "region", "width": 1}, {"from": "take", "to": "separatist", "width": 2}, {"from": "take", "to": "tension", "width": 3}, {"from": "make", "to": "account", "width": 1}, {"from": "make", "to": "anglophone", "width": 2}, {"from": "make", "to": "assistance", "width": 2}, {"from": "make", "to": "country", "width": 1}, {"from": "make", "to": "erudef", "width": 1}, {"from": "make", "to": "governance", "width": 1}, {"from": "make", "to": "grievance", "width": 1}, {"from": "make", "to": "matter", "width": 2}, {"from": "make", "to": "partner", "width": 1}, {"from": "make", "to": "tension", "width": 1}, {"from": "make", "to": "violence", "width": 1}, {"from": "un", "to": "call", "width": 1}, {"from": "un", "to": "cameroon", "width": 1}, {"from": "un", "to": "claim", "width": 1}, {"from": "un", "to": "condemn", "width": 1}, {"from": "un", "to": "describe", "width": 8}, {"from": "un", "to": "fail", "width": 2}, {"from": "un", "to": "hold", "width": 2}, {"from": "un", "to": "read", "width": 2}, {"from": "un", "to": "refer", "width": 2}, {"from": "un", "to": "result", "width": 1}, {"from": "un", "to": "say", "width": 1}, {"from": "un", "to": "separatist", "width": 2}, {"from": "declare", "to": "area", "width": 1}, {"from": "declare", "to": "cameroon", "width": 1}, {"from": "declare", "to": "ceasefire", "width": 1}, {"from": "declare", "to": "conflict", "width": 2}, {"from": "declare", "to": "crisis", "width": 1}, {"from": "declare", "to": "dialogue", "width": 2}, {"from": "declare", "to": "division", "width": 1}, {"from": "declare", "to": "focus", "width": 2}, {"from": "declare", "to": "force", "width": 2}, {"from": "declare", "to": "number", "width": 1}, {"from": "declare", "to": "official", "width": 1}, {"from": "declare", "to": "separatist", "width": 1}, {"from": "hold", "to": "abuse", "width": 5}, {"from": "hold", "to": "arrest", "width": 1}, {"from": "hold", "to": "atrocity", "width": 1}, {"from": "hold", "to": "charge", "width": 1}, {"from": "hold", "to": "demonstration", "width": 1}, {"from": "hold", "to": "people", "width": 2}, {"from": "hold", "to": "power", "width": 3}, {"from": "hold", "to": "protest", "width": 3}, {"from": "hold", "to": "region", "width": 3}, {"from": "hold", "to": "violence", "width": 3}, {"from": "hold", "to": "watch", "width": 1}, {"from": "turn", "to": "affair", "width": 1}, {"from": "turn", "to": "awareness", "width": 1}, {"from": "turn", "to": "community", "width": 1}, {"from": "turn", "to": "country", "width": 1}, {"from": "turn", "to": "crisis", "width": 3}, {"from": "turn", "to": "force", "width": 1}, {"from": "turn", "to": "government", "width": 1}, {"from": "turn", "to": "precedent", "width": 2}, {"from": "turn", "to": "region", "width": 2}, {"from": "turn", "to": "schoolchildren", "width": 2}, {"from": "need", "to": "assistance", "width": 5}, {"from": "need", "to": "crisis", "width": 2}, {"from": "need", "to": "deficit", "width": 2}, {"from": "need", "to": "leader", "width": 1}, {"from": "need", "to": "partner", "width": 1}, {"from": "need", "to": "people", "width": 6}, {"from": "need", "to": "population", "width": 1}, {"from": "need", "to": "process", "width": 1}, {"from": "need", "to": "violence", "width": 1}, {"from": "need", "to": "vulnerability", "width": 6}, {"from": "ig", "to": "argue", "width": 2}, {"from": "ig", "to": "attack", "width": 4}, {"from": "ig", "to": "begin", "width": 1}, {"from": "ig", "to": "condemn", "width": 1}, {"from": "ig", "to": "emerge", "width": 1}, {"from": "ig", "to": "include", "width": 10}, {"from": "ig", "to": "kill", "width": 1}, {"from": "ig", "to": "read", "width": 4}, {"from": "ig", "to": "say", "width": 2}, {"from": "ig", "to": "take", "width": 4}, {"from": "movement", "to": "begin", "width": 1}, {"from": "movement", "to": "call", "width": 2}, {"from": "movement", "to": "commit", "width": 1}, {"from": "movement", "to": "declare", "width": 2}, {"from": "movement", "to": "escalate", "width": 7}, {"from": "movement", "to": "estimate", "width": 1}, {"from": "movement", "to": "say", "width": 2}, {"from": "movement", "to": "take", "width": 1}, {"from": "movement", "to": "warn", "width": 2}, {"from": "highlights", "to": "affect", "width": 13}, {"from": "highlights", "to": "age", "width": 2}, {"from": "highlights", "to": "benefit", "width": 1}, {"from": "highlights", "to": "destroy", "width": 1}, {"from": "highlights", "to": "express", "width": 1}, {"from": "highlights", "to": "flee", "width": 2}, {"from": "highlights", "to": "nwsw", "width": 5}, {"from": "highlights", "to": "returnee", "width": 1}, {"from": "highlights", "to": "share", "width": 1}, {"from": "mary", "to": "bar", "width": 1}, {"from": "mary", "to": "cameroon", "width": 1}, {"from": "mary", "to": "continue", "width": 2}, {"from": "mary", "to": "feel", "width": 6}, {"from": "mary", "to": "izobo", "width": 1}, {"from": "mary", "to": "make", "width": 3}, {"from": "mary", "to": "nbuy", "width": 1}, {"from": "mary", "to": "protect", "width": 1}, {"from": "mary", "to": "start", "width": 2}, {"from": "describe", "to": "crisis", "width": 6}, {"from": "describe", "to": "general", "width": 1}, {"from": "describe", "to": "government", "width": 1}, {"from": "describe", "to": "group", "width": 3}, {"from": "describe", "to": "procedure", "width": 1}, {"from": "describe", "to": "region", "width": 4}, {"from": "describe", "to": "separatist", "width": 1}, {"from": "describe", "to": "system", "width": 1}, {"from": "yaound", "to": "cameroon", "width": 1}, {"from": "yaound", "to": "come", "width": 3}, {"from": "yaound", "to": "follow", "width": 1}, {"from": "yaound", "to": "govern", "width": 1}, {"from": "yaound", "to": "hold", "width": 3}, {"from": "yaound", "to": "identify", "width": 1}, {"from": "yaound", "to": "intensify", "width": 1}, {"from": "yaound", "to": "rampage", "width": 2}, {"from": "ensue", "to": "cameroon", "width": 3}, {"from": "ensue", "to": "law", "width": 1}, {"from": "ensue", "to": "power", "width": 1}, {"from": "ensue", "to": "region", "width": 2}, {"from": "ensue", "to": "representation", "width": 1}, {"from": "ensue", "to": "southwest", "width": 1}, {"from": "ensue", "to": "woman", "width": 1}, {"from": "ensue", "to": "word", "width": 1}, {"from": "africa", "to": "cameroon", "width": 1}, {"from": "africa", "to": "continue", "width": 1}, {"from": "africa", "to": "crossrefn", "width": 2}, {"from": "africa", "to": "explain", "width": 1}, {"from": "africa", "to": "nbuy", "width": 1}, {"from": "africa", "to": "proclaim", "width": 1}, {"from": "africa", "to": "read", "width": 1}, {"from": "africa", "to": "spend", "width": 1}, {"from": "approach", "to": "close", "width": 1}, {"from": "approach", "to": "continue", "width": 1}, {"from": "approach", "to": "focus", "width": 1}, {"from": "approach", "to": "investigate", "width": 1}, {"from": "approach", "to": "make", "width": 1}, {"from": "approach", "to": "need", "width": 4}, {"from": "approach", "to": "stalemate", "width": 1}, {"from": "approach", "to": "take", "width": 3}, {"from": "recognize", "to": "cameroon", "width": 3}, {"from": "recognize", "to": "crisis", "width": 1}, {"from": "recognize", "to": "dialogue", "width": 2}, {"from": "recognize", "to": "issue", "width": 5}, {"from": "recognize", "to": "organization", "width": 3}, {"from": "recognize", "to": "region", "width": 1}, {"from": "recognize", "to": "report", "width": 3}, {"from": "attack", "to": "force", "width": 6}, {"from": "attack", "to": "group", "width": 1}, {"from": "attack", "to": "hospital", "width": 1}, {"from": "attack", "to": "people", "width": 1}, {"from": "attack", "to": "region", "width": 2}, {"from": "attack", "to": "schoolchildren", "width": 3}, {"from": "attack", "to": "separatist", "width": 3}, {"from": "condemn", "to": "country", "width": 1}, {"from": "condemn", "to": "government", "width": 1}, {"from": "condemn", "to": "group", "width": 1}, {"from": "condemn", "to": "leader", "width": 1}, {"from": "condemn", "to": "region", "width": 1}, {"from": "condemn", "to": "separatist", "width": 1}, {"from": "escalate", "to": "cameroon", "width": 1}, {"from": "escalate", "to": "civilian", "width": 3}, {"from": "escalate", "to": "election", "width": 3}, {"from": "escalate", "to": "force", "width": 1}, {"from": "escalate", "to": "group", "width": 1}, {"from": "escalate", "to": "region", "width": 3}, {"from": "escalate", "to": "separatist", "width": 3}, {"from": "come", "to": "atrocity", "width": 1}, {"from": "come", "to": "diplomat", "width": 1}, {"from": "come", "to": "election", "width": 1}, {"from": "come", "to": "matter", "width": 1}, {"from": "come", "to": "news", "width": 1}, {"from": "come", "to": "power", "width": 2}, {"from": "come", "to": "violence", "width": 2}, {"from": "claim", "to": "accusation", "width": 2}, {"from": "claim", "to": "awareness", "width": 1}, {"from": "claim", "to": "girl", "width": 1}, {"from": "claim", "to": "government", "width": 2}, {"from": "claim", "to": "group", "width": 2}, {"from": "claim", "to": "region", "width": 1}, {"from": "s", "to": "become", "width": 2}, {"from": "s", "to": "believe", "width": 1}, {"from": "s", "to": "come", "width": 2}, {"from": "s", "to": "make", "width": 2}, {"from": "s", "to": "say", "width": 7}, {"from": "s", "to": "warn", "width": 3}, {"from": "use", "to": "cameroon", "width": 5}, {"from": "use", "to": "election", "width": 3}, {"from": "use", "to": "result", "width": 1}, {"from": "use", "to": "speech", "width": 1}, {"from": "use", "to": "tension", "width": 6}, {"from": "use", "to": "violence", "width": 2}, {"from": "parallel", "to": "biya", "width": 1}, {"from": "parallel", "to": "cameroon", "width": 2}, {"from": "parallel", "to": "conflict", "width": 3}, {"from": "parallel", "to": "effort", "width": 2}, {"from": "parallel", "to": "place", "width": 1}, {"from": "parallel", "to": "region", "width": 1}, {"from": "refer", "to": "assistance", "width": 1}, {"from": "refer", "to": "centre", "width": 1}, {"from": "refer", "to": "civilian", "width": 1}, {"from": "refer", "to": "fighter", "width": 1}, {"from": "refer", "to": "group", "width": 7}, {"from": "refer", "to": "organisation", "width": 1}, {"from": "force", "to": "conflict", "width": 1}, {"from": "force", "to": "consider", "width": 5}, {"from": "force", "to": "people", "width": 3}, {"from": "force", "to": "recognise", "width": 1}, {"from": "force", "to": "region", "width": 1}, {"from": "cambridge", "to": "argue", "width": 3}, {"from": "cambridge", "to": "condemn", "width": 1}, {"from": "cambridge", "to": "continue", "width": 1}, {"from": "cambridge", "to": "emerge", "width": 1}, {"from": "cambridge", "to": "include", "width": 1}, {"from": "cambridge", "to": "read", "width": 2}, {"from": "massacre", "to": "cameroon", "width": 1}, {"from": "massacre", "to": "conflict", "width": 1}, {"from": "massacre", "to": "government", "width": 1}, {"from": "massacre", "to": "massacre", "width": 3}, {"from": "massacre", "to": "place", "width": 1}, {"from": "massacre", "to": "read", "width": 2}, {"from": "continue", "to": "conflict", "width": 2}, {"from": "continue", "to": "crisis", "width": 2}, {"from": "continue", "to": "grievance", "width": 1}, {"from": "continue", "to": "region", "width": 1}, {"from": "continue", "to": "term", "width": 4}, {"from": "particular", "to": "accuse", "width": 1}, {"from": "particular", "to": "continue", "width": 2}, {"from": "particular", "to": "displace", "width": 2}, {"from": "particular", "to": "engage", "width": 6}, {"from": "particular", "to": "force", "width": 1}, {"from": "particular", "to": "reunite", "width": 2}, {"from": "affect", "to": "child", "width": 4}, {"from": "affect", "to": "crisis", "width": 2}, {"from": "affect", "to": "education", "width": 1}, {"from": "affect", "to": "malnutrition", "width": 1}, {"from": "affect", "to": "region", "width": 4}, {"from": "affect", "to": "service", "width": 3}, {"from": "ilaria", "to": "arrest", "width": 1}, {"from": "ilaria", "to": "escalate", "width": 1}, {"from": "ilaria", "to": "estimate", "width": 1}, {"from": "ilaria", "to": "hold", "width": 1}, {"from": "ilaria", "to": "release", "width": 2}, {"from": "ilaria", "to": "tell", "width": 1}, {"from": "start", "to": "anglophone", "width": 1}, {"from": "start", "to": "cameroon", "width": 1}, {"from": "start", "to": "crisis", "width": 1}, {"from": "start", "to": "deserve", "width": 1}, {"from": "start", "to": "issue", "width": 2}, {"from": "start", "to": "term", "width": 1}, {"from": "spend", "to": "anglophone", "width": 1}, {"from": "spend", "to": "cameroon", "width": 1}, {"from": "spend", "to": "country", "width": 1}, {"from": "spend", "to": "region", "width": 1}, {"from": "spend", "to": "term", "width": 1}, {"from": "spend", "to": "year", "width": 2}, {"from": "kamto", "to": "announce", "width": 3}, {"from": "kamto", "to": "kill", "width": 2}, {"from": "kamto", "to": "proclaim", "width": 4}, {"from": "kamto", "to": "see", "width": 1}, {"from": "kamto", "to": "take", "width": 3}, {"from": "kamto", "to": "use", "width": 6}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"springLength": 100, "springConstant": 0.085, "damping": 0.41, "avoidOverlap": 1}, "minVelocity": 0.75, "solver": "forceAtlas2Based"}, "nodes": {"font": {"size": 40, "face": "verdana"}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
