@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "achieve", "label": "achieve", "shape": "dot"}, {"color": "#97c2fc", "id": "ajnewsgrid", "label": "ajnewsgrid", "shape": "dot"}, {"color": "#97c2fc", "id": "aminajmohamme", "label": "aminajmohamme", "shape": "dot"}, {"color": "#97c2fc", "id": "antonioguterre", "label": "antonioguterre", "shape": "dot"}, {"color": "#97c2fc", "id": "ask", "label": "ask", "shape": "dot"}, {"color": "#97c2fc", "id": "await", "label": "await", "shape": "dot"}, {"color": "#97c2fc", "id": "become", "label": "become", "shape": "dot"}, {"color": "#97c2fc", "id": "declare", "label": "declare", "shape": "dot"}, {"color": "#97c2fc", "id": "do", "label": "do", "shape": "dot"}, {"color": "#97c2fc", "id": "drop", "label": "drop", "shape": "dot"}, {"color": "#97c2fc", "id": "eduacate", "label": "eduacate", "shape": "dot"}, {"color": "#97c2fc", "id": "endorse", "label": "endorse", "shape": "dot"}, {"color": "#97c2fc", "id": "exist", "label": "exist", "shape": "dot"}, {"color": "#97c2fc", "id": "fix", "label": "fix", "shape": "dot"}, {"color": "#97c2fc", "id": "freeallarreste", "label": "freeallarreste", "shape": "dot"}, {"color": "#97c2fc", "id": "go", "label": "go", "shape": "dot"}, {"color": "#97c2fc", "id": "grant", "label": "grant", "shape": "dot"}, {"color": "#97c2fc", "id": "hank", "label": "hank", "shape": "dot"}, {"color": "#97c2fc", "id": "help", "label": "help", "shape": "dot"}, {"color": "#97c2fc", "id": "implement", "label": "implement", "shape": "dot"}, {"color": "#97c2fc", "id": "kill", "label": "kill", "shape": "dot"}, {"color": "#97c2fc", "id": "leave", "label": "leave", "shape": "dot"}, {"color": "#97c2fc", "id": "let", "label": "let", "shape": "dot"}, {"color": "#97c2fc", "id": "lie", "label": "lie", "shape": "dot"}, {"color": "#97c2fc", "id": "look", "label": "look", "shape": "dot"}, {"color": "#97c2fc", "id": "maintain", "label": "maintain", "shape": "dot"}, {"color": "#97c2fc", "id": "make", "label": "make", "shape": "dot"}, {"color": "#97c2fc", "id": "matter", "label": "matter", "shape": "dot"}, {"color": "#97c2fc", "id": "mete", "label": "mete", "shape": "dot"}, {"color": "#97c2fc", "id": "need", "label": "need", "shape": "dot"}, {"color": "#97c2fc", "id": "nigeria", "label": "nigeria", "shape": "dot"}, {"color": "#97c2fc", "id": "organicborder", "label": "organicborder", "shape": "dot"}, {"color": "#97c2fc", "id": "predict", "label": "predict", "shape": "dot"}, {"color": "#97c2fc", "id": "protest", "label": "protest", "shape": "dot"}, {"color": "#97c2fc", "id": "realdonaldtrump", "label": "realdonaldtrump", "shape": "dot"}, {"color": "#97c2fc", "id": "realjameswood", "label": "realjameswood", "shape": "dot"}, {"color": "#97c2fc", "id": "recognize", "label": "recognize", "shape": "dot"}, {"color": "#97c2fc", "id": "republique", "label": "republique", "shape": "dot"}, {"color": "#97c2fc", "id": "respond", "label": "respond", "shape": "dot"}, {"color": "#97c2fc", "id": "rob", "label": "rob", "shape": "dot"}, {"color": "#97c2fc", "id": "say", "label": "say", "shape": "dot"}, {"color": "#97c2fc", "id": "seek", "label": "seek", "shape": "dot"}, {"color": "#97c2fc", "id": "stop", "label": "stop", "shape": "dot"}, {"color": "#97c2fc", "id": "stoptalke", "label": "stoptalke", "shape": "dot"}, {"color": "#97c2fc", "id": "unite4heritage", "label": "unite4heritage", "shape": "dot"}, {"color": "#97c2fc", "id": "violate", "label": "violate", "shape": "dot"}, {"color": "#97c2fc", "id": "wait", "label": "wait", "shape": "dot"}, {"color": "#97c2fc", "id": "want", "label": "want", "shape": "dot"}, {"color": "#97c2fc", "id": "watch", "label": "watch", "shape": "dot"}, {"color": "#97c2fc", "id": "wfp", "label": "wfp", "shape": "dot"}, {"color": "#97c2fc", "id": "un", "label": "un", "shape": "dot"}, {"color": "#97c2fc", "id": "ambazonia", "label": "ambazonia", "shape": "dot"}, {"color": "#97c2fc", "id": "attack", "label": "attack", "shape": "dot"}, {"color": "#97c2fc", "id": "boycottmtncameroon", "label": "boycottmtncameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "bringbackourinternet", "label": "bringbackourinternet", "shape": "dot"}, {"color": "#97c2fc", "id": "britishparliaman", "label": "britishparliaman", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroon", "label": "cameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroonian", "label": "cameroonian", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroun", "label": "cameroun", "shape": "dot"}, {"color": "#97c2fc", "id": "crisis", "label": "crisis", "shape": "dot"}, {"color": "#97c2fc", "id": "demilitarizesoutherncameroon", "label": "demilitarizesoutherncameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "freeayah", "label": "freeayah", "shape": "dot"}, {"color": "#97c2fc", "id": "freeayahpaul", "label": "freeayahpaul", "shape": "dot"}, {"color": "#97c2fc", "id": "freedom", "label": "freedom", "shape": "dot"}, {"color": "#97c2fc", "id": "freefontem", "label": "freefontem", "shape": "dot"}, {"color": "#97c2fc", "id": "freenkongho", "label": "freenkongho", "shape": "dot"}, {"color": "#97c2fc", "id": "freesoutherncameroon", "label": "freesoutherncameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "httpst", "label": "httpst", "shape": "dot"}, {"color": "#97c2fc", "id": "idiet", "label": "idiet", "shape": "dot"}, {"color": "#97c2fc", "id": "independencewegot", "label": "independencewegot", "shape": "dot"}, {"color": "#97c2fc", "id": "letsi", "label": "letsi", "shape": "dot"}, {"color": "#97c2fc", "id": "man", "label": "man", "shape": "dot"}, {"color": "#97c2fc", "id": "notodictatorship", "label": "notodictatorship", "shape": "dot"}, {"color": "#97c2fc", "id": "notoschoolresumption", "label": "notoschoolresumption", "shape": "dot"}, {"color": "#97c2fc", "id": "people", "label": "people", "shape": "dot"}, {"color": "#97c2fc", "id": "refugee", "label": "refugee", "shape": "dot"}, {"color": "#97c2fc", "id": "resist", "label": "resist", "shape": "dot"}, {"color": "#97c2fc", "id": "restorationnow", "label": "restorationnow", "shape": "dot"}, {"color": "#97c2fc", "id": "sisikuayuktabe", "label": "sisikuayuktabe", "shape": "dot"}, {"color": "#97c2fc", "id": "southerncameroon", "label": "southerncameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "stopbiyasgenocide", "label": "stopbiyasgenocide", "shape": "dot"}, {"color": "#97c2fc", "id": "stopgenocide", "label": "stopgenocide", "shape": "dot"}, {"color": "#97c2fc", "id": "stopthekilling", "label": "stopthekilling", "shape": "dot"}, {"color": "#97c2fc", "id": "sun", "label": "sun", "shape": "dot"}, {"color": "#97c2fc", "id": "time", "label": "time", "shape": "dot"}, {"color": "#97c2fc", "id": "warning", "label": "warning", "shape": "dot"}, {"color": "#97c2fc", "id": "4gette", "label": "4gette", "shape": "dot"}, {"color": "#97c2fc", "id": "arrest", "label": "arrest", "shape": "dot"}, {"color": "#97c2fc", "id": "befall", "label": "befall", "shape": "dot"}, {"color": "#97c2fc", "id": "believe", "label": "believe", "shape": "dot"}, {"color": "#97c2fc", "id": "celebrate", "label": "celebrate", "shape": "dot"}, {"color": "#97c2fc", "id": "coituariisd1", "label": "coituariisd1", "shape": "dot"}, {"color": "#97c2fc", "id": "commit", "label": "commit", "shape": "dot"}, {"color": "#97c2fc", "id": "continue", "label": "continue", "shape": "dot"}, {"color": "#97c2fc", "id": "crtvweb", "label": "crtvweb", "shape": "dot"}, {"color": "#97c2fc", "id": "enter", "label": "enter", "shape": "dot"}, {"color": "#97c2fc", "id": "give", "label": "give", "shape": "dot"}, {"color": "#97c2fc", "id": "know", "label": "know", "shape": "dot"}, {"color": "#97c2fc", "id": "offer", "label": "offer", "shape": "dot"}, {"color": "#97c2fc", "id": "pay", "label": "pay", "shape": "dot"}, {"color": "#97c2fc", "id": "praise", "label": "praise", "shape": "dot"}, {"color": "#97c2fc", "id": "receive", "label": "receive", "shape": "dot"}, {"color": "#97c2fc", "id": "regard", "label": "regard", "shape": "dot"}, {"color": "#97c2fc", "id": "see", "label": "see", "shape": "dot"}, {"color": "#97c2fc", "id": "show", "label": "show", "shape": "dot"}, {"color": "#97c2fc", "id": "torch", "label": "torch", "shape": "dot"}, {"color": "#97c2fc", "id": "understand", "label": "understand", "shape": "dot"}, {"color": "#97c2fc", "id": "withdraw", "label": "withdraw", "shape": "dot"}, {"color": "#97c2fc", "id": "prpaulbiya", "label": "prpaulbiya", "shape": "dot"}, {"color": "#97c2fc", "id": "annex", "label": "annex", "shape": "dot"}, {"color": "#97c2fc", "id": "begin", "label": "begin", "shape": "dot"}, {"color": "#97c2fc", "id": "call", "label": "call", "shape": "dot"}, {"color": "#97c2fc", "id": "co7vpgrx7vg2", "label": "co7vpgrx7vg2", "shape": "dot"}, {"color": "#97c2fc", "id": "cookvfxzsefy", "label": "cookvfxzsefy", "shape": "dot"}, {"color": "#97c2fc", "id": "fabricate", "label": "fabricate", "shape": "dot"}, {"color": "#97c2fc", "id": "federate", "label": "federate", "shape": "dot"}, {"color": "#97c2fc", "id": "form", "label": "form", "shape": "dot"}, {"color": "#97c2fc", "id": "free", "label": "free", "shape": "dot"}, {"color": "#97c2fc", "id": "invite", "label": "invite", "shape": "dot"}, {"color": "#97c2fc", "id": "list", "label": "list", "shape": "dot"}, {"color": "#97c2fc", "id": "love", "label": "love", "shape": "dot"}, {"color": "#97c2fc", "id": "reject", "label": "reject", "shape": "dot"}, {"color": "#97c2fc", "id": "send", "label": "send", "shape": "dot"}, {"color": "#97c2fc", "id": "stand", "label": "stand", "shape": "dot"}, {"color": "#97c2fc", "id": "thank", "label": "thank", "shape": "dot"}, {"color": "#97c2fc", "id": "co6ezditenv4", "label": "co6ezditenv4", "shape": "dot"}, {"color": "#97c2fc", "id": "cojskjqb8nlb", "label": "cojskjqb8nlb", "shape": "dot"}, {"color": "#97c2fc", "id": "happen", "label": "happen", "shape": "dot"}, {"color": "#97c2fc", "id": "killerpresident", "label": "killerpresident", "shape": "dot"}, {"color": "#97c2fc", "id": "label", "label": "label", "shape": "dot"}, {"color": "#97c2fc", "id": "restore", "label": "restore", "shape": "dot"}, {"color": "#97c2fc", "id": "sheyyungri", "label": "sheyyungri", "shape": "dot"}, {"color": "#97c2fc", "id": "suggest", "label": "suggest", "shape": "dot"}, {"color": "#97c2fc", "id": "take", "label": "take", "shape": "dot"}, {"color": "#97c2fc", "id": "tell", "label": "tell", "shape": "dot"}, {"color": "#97c2fc", "id": "biya", "label": "biya", "shape": "dot"}, {"color": "#97c2fc", "id": "abuse", "label": "abuse", "shape": "dot"}, {"color": "#97c2fc", "id": "ambazonian", "label": "ambazonian", "shape": "dot"}, {"color": "#97c2fc", "id": "barberism", "label": "barberism", "shape": "dot"}, {"color": "#97c2fc", "id": "dictator", "label": "dictator", "shape": "dot"}, {"color": "#97c2fc", "id": "genocide", "label": "genocide", "shape": "dot"}, {"color": "#97c2fc", "id": "genocideinsoutherncameroon", "label": "genocideinsoutherncameroon", "shape": "dot"}, {"color": "#97c2fc", "id": "hypocrisy", "label": "hypocrisy", "shape": "dot"}, {"color": "#97c2fc", "id": "killing", "label": "killing", "shape": "dot"}, {"color": "#97c2fc", "id": "parliament", "label": "parliament", "shape": "dot"}, {"color": "#97c2fc", "id": "unsc", "label": "unsc", "shape": "dot"}, {"color": "#97c2fc", "id": "apply", "label": "apply", "shape": "dot"}, {"color": "#97c2fc", "id": "bringbackourleadersandboy", "label": "bringbackourleadersandboy", "shape": "dot"}, {"color": "#97c2fc", "id": "cry", "label": "cry", "shape": "dot"}, {"color": "#97c2fc", "id": "get", "label": "get", "shape": "dot"}, {"color": "#97c2fc", "id": "handsoffourchurche", "label": "handsoffourchurche", "shape": "dot"}, {"color": "#97c2fc", "id": "join", "label": "join", "shape": "dot"}, {"color": "#97c2fc", "id": "protestify", "label": "protestify", "shape": "dot"}, {"color": "#97c2fc", "id": "releaseallareste", "label": "releaseallareste", "shape": "dot"}, {"color": "#97c2fc", "id": "stopthegenocide", "label": "stopthegenocide", "shape": "dot"}, {"color": "#97c2fc", "id": "ambaperspective", "label": "ambaperspective", "shape": "dot"}, {"color": "#97c2fc", "id": "brutality", "label": "brutality", "shape": "dot"}, {"color": "#97c2fc", "id": "fraud", "label": "fraud", "shape": "dot"}, {"color": "#97c2fc", "id": "incarceration", "label": "incarceration", "shape": "dot"}, {"color": "#97c2fc", "id": "injustice", "label": "injustice", "shape": "dot"}, {"color": "#97c2fc", "id": "play", "label": "play", "shape": "dot"}, {"color": "#97c2fc", "id": "unhumanright", "label": "unhumanright", "shape": "dot"}, {"color": "#97c2fc", "id": "violation", "label": "violation", "shape": "dot"}, {"color": "#97c2fc", "id": "bless", "label": "bless", "shape": "dot"}, {"color": "#97c2fc", "id": "come", "label": "come", "shape": "dot"}, {"color": "#97c2fc", "id": "convict", "label": "convict", "shape": "dot"}, {"color": "#97c2fc", "id": "expose", "label": "expose", "shape": "dot"}, {"color": "#97c2fc", "id": "forewarn", "label": "forewarn", "shape": "dot"}, {"color": "#97c2fc", "id": "freeallareste", "label": "freeallareste", "shape": "dot"}, {"color": "#97c2fc", "id": "freeallarrrste", "label": "freeallarrrste", "shape": "dot"}, {"color": "#97c2fc", "id": "incapacite", "label": "incapacite", "shape": "dot"}, {"color": "#97c2fc", "id": "note", "label": "note", "shape": "dot"}, {"color": "#97c2fc", "id": "save", "label": "save", "shape": "dot"}, {"color": "#97c2fc", "id": "god", "label": "god", "shape": "dot"}, {"color": "#97c2fc", "id": "bringbackourleader", "label": "bringbackourleader", "shape": "dot"}, {"color": "#97c2fc", "id": "control", "label": "control", "shape": "dot"}, {"color": "#97c2fc", "id": "homeland", "label": "homeland", "shape": "dot"}, {"color": "#97c2fc", "id": "misunderstood", "label": "misunderstood", "shape": "dot"}, {"color": "#97c2fc", "id": "presentation", "label": "presentation", "shape": "dot"}, {"color": "#97c2fc", "id": "sir", "label": "sir", "shape": "dot"}, {"color": "#97c2fc", "id": "community", "label": "community", "shape": "dot"}, {"color": "#97c2fc", "id": "datum", "label": "datum", "shape": "dot"}, {"color": "#97c2fc", "id": "hostage", "label": "hostage", "shape": "dot"}, {"color": "#97c2fc", "id": "parktown", "label": "parktown", "shape": "dot"}, {"color": "#97c2fc", "id": "path", "label": "path", "shape": "dot"}, {"color": "#97c2fc", "id": "power", "label": "power", "shape": "dot"}, {"color": "#97c2fc", "id": "rubbish", "label": "rubbish", "shape": "dot"}, {"color": "#97c2fc", "id": "side", "label": "side", "shape": "dot"}, {"color": "#97c2fc", "id": "war", "label": "war", "shape": "dot"}, {"color": "#97c2fc", "id": "bury", "label": "bury", "shape": "dot"}, {"color": "#97c2fc", "id": "cotbdgdfxxya", "label": "cotbdgdfxxya", "shape": "dot"}, {"color": "#97c2fc", "id": "fear", "label": "fear", "shape": "dot"}, {"color": "#97c2fc", "id": "feel", "label": "feel", "shape": "dot"}, {"color": "#97c2fc", "id": "fight", "label": "fight", "shape": "dot"}, {"color": "#97c2fc", "id": "govern", "label": "govern", "shape": "dot"}, {"color": "#97c2fc", "id": "hope", "label": "hope", "shape": "dot"}, {"color": "#97c2fc", "id": "question", "label": "question", "shape": "dot"}, {"color": "#97c2fc", "id": "refer", "label": "refer", "shape": "dot"}, {"color": "#97c2fc", "id": "u", "label": "u", "shape": "dot"}, {"color": "#97c2fc", "id": "add", "label": "add", "shape": "dot"}, {"color": "#97c2fc", "id": "bring", "label": "bring", "shape": "dot"}, {"color": "#97c2fc", "id": "freedomfreedomfreedomweneed", "label": "freedomfreedomfreedomweneed", "shape": "dot"}, {"color": "#97c2fc", "id": "hand", "label": "hand", "shape": "dot"}, {"color": "#97c2fc", "id": "lend", "label": "lend", "shape": "dot"}, {"color": "#97c2fc", "id": "propose", "label": "propose", "shape": "dot"}, {"color": "#97c2fc", "id": "realize", "label": "realize", "shape": "dot"}, {"color": "#97c2fc", "id": "ree", "label": "ree", "shape": "dot"}, {"color": "#97c2fc", "id": "strugglecontinue", "label": "strugglecontinue", "shape": "dot"}, {"color": "#97c2fc", "id": "accept", "label": "accept", "shape": "dot"}, {"color": "#97c2fc", "id": "equip", "label": "equip", "shape": "dot"}, {"color": "#97c2fc", "id": "protect", "label": "protect", "shape": "dot"}, {"color": "#97c2fc", "id": "paulbiya", "label": "paulbiya", "shape": "dot"}, {"color": "#97c2fc", "id": "ajstream", "label": "ajstream", "shape": "dot"}, {"color": "#97c2fc", "id": "commonwealthsec", "label": "commonwealthsec", "shape": "dot"}, {"color": "#97c2fc", "id": "paubiya", "label": "paubiya", "shape": "dot"}, {"color": "#97c2fc", "id": "statue", "label": "statue", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "un", "to": "achieve", "width": 1}, {"from": "un", "to": "ajnewsgrid", "width": 1}, {"from": "un", "to": "aminajmohamme", "width": 1}, {"from": "un", "to": "antonioguterre", "width": 12}, {"from": "un", "to": "ask", "width": 1}, {"from": "un", "to": "await", "width": 1}, {"from": "un", "to": "become", "width": 1}, {"from": "un", "to": "declare", "width": 1}, {"from": "un", "to": "do", "width": 1}, {"from": "un", "to": "drop", "width": 1}, {"from": "un", "to": "eduacate", "width": 1}, {"from": "un", "to": "endorse", "width": 2}, {"from": "un", "to": "exist", "width": 2}, {"from": "un", "to": "fix", "width": 2}, {"from": "un", "to": "freeallarreste", "width": 6}, {"from": "un", "to": "go", "width": 3}, {"from": "un", "to": "grant", "width": 3}, {"from": "un", "to": "hank", "width": 1}, {"from": "un", "to": "help", "width": 1}, {"from": "un", "to": "implement", "width": 1}, {"from": "un", "to": "kill", "width": 1}, {"from": "un", "to": "leave", "width": 1}, {"from": "un", "to": "let", "width": 2}, {"from": "un", "to": "lie", "width": 1}, {"from": "un", "to": "look", "width": 1}, {"from": "un", "to": "maintain", "width": 1}, {"from": "un", "to": "make", "width": 1}, {"from": "un", "to": "matter", "width": 2}, {"from": "un", "to": "mete", "width": 1}, {"from": "un", "to": "need", "width": 1}, {"from": "un", "to": "nigeria", "width": 1}, {"from": "un", "to": "organicborder", "width": 1}, {"from": "un", "to": "predict", "width": 1}, {"from": "un", "to": "protest", "width": 1}, {"from": "un", "to": "realdonaldtrump", "width": 1}, {"from": "un", "to": "realjameswood", "width": 1}, {"from": "un", "to": "recognize", "width": 1}, {"from": "un", "to": "republique", "width": 1}, {"from": "un", "to": "respond", "width": 1}, {"from": "un", "to": "rob", "width": 1}, {"from": "un", "to": "say", "width": 1}, {"from": "un", "to": "seek", "width": 1}, {"from": "un", "to": "stop", "width": 4}, {"from": "un", "to": "stoptalke", "width": 1}, {"from": "un", "to": "unite4heritage", "width": 1}, {"from": "un", "to": "violate", "width": 1}, {"from": "un", "to": "wait", "width": 1}, {"from": "un", "to": "want", "width": 2}, {"from": "un", "to": "watch", "width": 1}, {"from": "un", "to": "wfp", "width": 1}, {"from": "freeallarreste", "to": "ambazonia", "width": 1}, {"from": "freeallarreste", "to": "antonioguterre", "width": 4}, {"from": "freeallarreste", "to": "attack", "width": 1}, {"from": "freeallarreste", "to": "boycottmtncameroon", "width": 1}, {"from": "freeallarreste", "to": "bringbackourinternet", "width": 4}, {"from": "freeallarreste", "to": "britishparliaman", "width": 1}, {"from": "freeallarreste", "to": "cameroon", "width": 6}, {"from": "freeallarreste", "to": "cameroonian", "width": 1}, {"from": "freeallarreste", "to": "cameroun", "width": 1}, {"from": "freeallarreste", "to": "crisis", "width": 1}, {"from": "freeallarreste", "to": "demilitarizesoutherncameroon", "width": 1}, {"from": "freeallarreste", "to": "freeayah", "width": 3}, {"from": "freeallarreste", "to": "freeayahpaul", "width": 1}, {"from": "freeallarreste", "to": "freedom", "width": 2}, {"from": "freeallarreste", "to": "freefontem", "width": 1}, {"from": "freeallarreste", "to": "freenkongho", "width": 1}, {"from": "freeallarreste", "to": "freesoutherncameroon", "width": 27}, {"from": "freeallarreste", "to": "httpst", "width": 52}, {"from": "freeallarreste", "to": "idiet", "width": 1}, {"from": "freeallarreste", "to": "independencewegot", "width": 1}, {"from": "freeallarreste", "to": "letsi", "width": 2}, {"from": "freeallarreste", "to": "man", "width": 1}, {"from": "freeallarreste", "to": "notodictatorship", "width": 1}, {"from": "freeallarreste", "to": "notoschoolresumption", "width": 1}, {"from": "freeallarreste", "to": "people", "width": 1}, {"from": "freeallarreste", "to": "refugee", "width": 1}, {"from": "freeallarreste", "to": "republique", "width": 1}, {"from": "freeallarreste", "to": "resist", "width": 1}, {"from": "freeallarreste", "to": "restorationnow", "width": 6}, {"from": "freeallarreste", "to": "sisikuayuktabe", "width": 1}, {"from": "freeallarreste", "to": "southerncameroon", "width": 1}, {"from": "freeallarreste", "to": "stopbiyasgenocide", "width": 1}, {"from": "freeallarreste", "to": "stopgenocide", "width": 1}, {"from": "freeallarreste", "to": "stopthekilling", "width": 2}, {"from": "freeallarreste", "to": "sun", "width": 1}, {"from": "freeallarreste", "to": "time", "width": 1}, {"from": "freeallarreste", "to": "warning", "width": 1}, {"from": "prpaulbiya", "to": "4gette", "width": 1}, {"from": "prpaulbiya", "to": "aminajmohamme", "width": 1}, {"from": "prpaulbiya", "to": "antonioguterre", "width": 2}, {"from": "prpaulbiya", "to": "arrest", "width": 1}, {"from": "prpaulbiya", "to": "become", "width": 1}, {"from": "prpaulbiya", "to": "befall", "width": 1}, {"from": "prpaulbiya", "to": "believe", "width": 1}, {"from": "prpaulbiya", "to": "celebrate", "width": 1}, {"from": "prpaulbiya", "to": "coituariisd1", "width": 1}, {"from": "prpaulbiya", "to": "commit", "width": 1}, {"from": "prpaulbiya", "to": "continue", "width": 2}, {"from": "prpaulbiya", "to": "crtvweb", "width": 2}, {"from": "prpaulbiya", "to": "do", "width": 1}, {"from": "prpaulbiya", "to": "enter", "width": 1}, {"from": "prpaulbiya", "to": "freeallarreste", "width": 1}, {"from": "prpaulbiya", "to": "give", "width": 2}, {"from": "prpaulbiya", "to": "go", "width": 1}, {"from": "prpaulbiya", "to": "help", "width": 1}, {"from": "prpaulbiya", "to": "kill", "width": 1}, {"from": "prpaulbiya", "to": "know", "width": 3}, {"from": "prpaulbiya", "to": "let", "width": 1}, {"from": "prpaulbiya", "to": "offer", "width": 2}, {"from": "prpaulbiya", "to": "pay", "width": 1}, {"from": "prpaulbiya", "to": "praise", "width": 1}, {"from": "prpaulbiya", "to": "realdonaldtrump", "width": 1}, {"from": "prpaulbiya", "to": "receive", "width": 1}, {"from": "prpaulbiya", "to": "regard", "width": 1}, {"from": "prpaulbiya", "to": "say", "width": 1}, {"from": "prpaulbiya", "to": "see", "width": 1}, {"from": "prpaulbiya", "to": "show", "width": 1}, {"from": "prpaulbiya", "to": "stop", "width": 1}, {"from": "prpaulbiya", "to": "torch", "width": 1}, {"from": "prpaulbiya", "to": "understand", "width": 1}, {"from": "prpaulbiya", "to": "withdraw", "width": 1}, {"from": "ambazonia", "to": "annex", "width": 1}, {"from": "ambazonia", "to": "begin", "width": 1}, {"from": "ambazonia", "to": "call", "width": 1}, {"from": "ambazonia", "to": "co7vpgrx7vg2", "width": 1}, {"from": "ambazonia", "to": "cookvfxzsefy", "width": 1}, {"from": "ambazonia", "to": "fabricate", "width": 1}, {"from": "ambazonia", "to": "federate", "width": 1}, {"from": "ambazonia", "to": "form", "width": 1}, {"from": "ambazonia", "to": "free", "width": 3}, {"from": "ambazonia", "to": "invite", "width": 1}, {"from": "ambazonia", "to": "let", "width": 1}, {"from": "ambazonia", "to": "list", "width": 1}, {"from": "ambazonia", "to": "look", "width": 4}, {"from": "ambazonia", "to": "love", "width": 1}, {"from": "ambazonia", "to": "make", "width": 1}, {"from": "ambazonia", "to": "need", "width": 1}, {"from": "ambazonia", "to": "realdonaldtrump", "width": 2}, {"from": "ambazonia", "to": "reject", "width": 2}, {"from": "ambazonia", "to": "say", "width": 1}, {"from": "ambazonia", "to": "send", "width": 1}, {"from": "ambazonia", "to": "stand", "width": 2}, {"from": "ambazonia", "to": "stop", "width": 4}, {"from": "ambazonia", "to": "thank", "width": 2}, {"from": "ambazonia", "to": "withdraw", "width": 1}, {"from": "biya", "to": "co6ezditenv4", "width": 1}, {"from": "biya", "to": "cojskjqb8nlb", "width": 1}, {"from": "biya", "to": "continue", "width": 3}, {"from": "biya", "to": "declare", "width": 1}, {"from": "biya", "to": "freeallarreste", "width": 4}, {"from": "biya", "to": "happen", "width": 2}, {"from": "biya", "to": "kill", "width": 2}, {"from": "biya", "to": "killerpresident", "width": 1}, {"from": "biya", "to": "label", "width": 1}, {"from": "biya", "to": "receive", "width": 1}, {"from": "biya", "to": "restore", "width": 1}, {"from": "biya", "to": "sheyyungri", "width": 1}, {"from": "biya", "to": "stop", "width": 7}, {"from": "biya", "to": "suggest", "width": 1}, {"from": "biya", "to": "take", "width": 1}, {"from": "biya", "to": "tell", "width": 1}, {"from": "biya", "to": "want", "width": 1}, {"from": "stop", "to": "abuse", "width": 2}, {"from": "stop", "to": "ambazonian", "width": 1}, {"from": "stop", "to": "barberism", "width": 2}, {"from": "stop", "to": "boycottmtncameroon", "width": 1}, {"from": "stop", "to": "bringbackourinternet", "width": 1}, {"from": "stop", "to": "cameroon", "width": 3}, {"from": "stop", "to": "cameroonian", "width": 1}, {"from": "stop", "to": "dictator", "width": 1}, {"from": "stop", "to": "genocide", "width": 1}, {"from": "stop", "to": "genocideinsoutherncameroon", "width": 2}, {"from": "stop", "to": "httpst", "width": 6}, {"from": "stop", "to": "hypocrisy", "width": 1}, {"from": "stop", "to": "killing", "width": 2}, {"from": "stop", "to": "parliament", "width": 1}, {"from": "stop", "to": "southerncameroon", "width": 1}, {"from": "stop", "to": "thank", "width": 1}, {"from": "stop", "to": "unsc", "width": 1}, {"from": "bringbackourinternet", "to": "apply", "width": 1}, {"from": "bringbackourinternet", "to": "believe", "width": 1}, {"from": "bringbackourinternet", "to": "bringbackourleadersandboy", "width": 1}, {"from": "bringbackourinternet", "to": "continue", "width": 1}, {"from": "bringbackourinternet", "to": "cry", "width": 1}, {"from": "bringbackourinternet", "to": "get", "width": 1}, {"from": "bringbackourinternet", "to": "handsoffourchurche", "width": 1}, {"from": "bringbackourinternet", "to": "hank", "width": 2}, {"from": "bringbackourinternet", "to": "join", "width": 1}, {"from": "bringbackourinternet", "to": "need", "width": 2}, {"from": "bringbackourinternet", "to": "protestify", "width": 1}, {"from": "bringbackourinternet", "to": "releaseallareste", "width": 1}, {"from": "bringbackourinternet", "to": "stopthegenocide", "width": 1}, {"from": "antonioguterre", "to": "ambaperspective", "width": 2}, {"from": "antonioguterre", "to": "brutality", "width": 1}, {"from": "antonioguterre", "to": "cameroon", "width": 1}, {"from": "antonioguterre", "to": "crisis", "width": 1}, {"from": "antonioguterre", "to": "fraud", "width": 1}, {"from": "antonioguterre", "to": "freedom", "width": 1}, {"from": "antonioguterre", "to": "freesoutherncameroon", "width": 8}, {"from": "antonioguterre", "to": "httpst", "width": 12}, {"from": "antonioguterre", "to": "incarceration", "width": 2}, {"from": "antonioguterre", "to": "injustice", "width": 1}, {"from": "antonioguterre", "to": "play", "width": 1}, {"from": "antonioguterre", "to": "restorationnow", "width": 1}, {"from": "antonioguterre", "to": "unhumanright", "width": 1}, {"from": "antonioguterre", "to": "unsc", "width": 1}, {"from": "antonioguterre", "to": "violation", "width": 1}, {"from": "god", "to": "antonioguterre", "width": 1}, {"from": "god", "to": "bless", "width": 1}, {"from": "god", "to": "come", "width": 1}, {"from": "god", "to": "continue", "width": 2}, {"from": "god", "to": "convict", "width": 2}, {"from": "god", "to": "do", "width": 1}, {"from": "god", "to": "expose", "width": 1}, {"from": "god", "to": "forewarn", "width": 1}, {"from": "god", "to": "freeallareste", "width": 1}, {"from": "god", "to": "freeallarrrste", "width": 1}, {"from": "god", "to": "give", "width": 1}, {"from": "god", "to": "help", "width": 2}, {"from": "god", "to": "incapacite", "width": 1}, {"from": "god", "to": "note", "width": 2}, {"from": "god", "to": "save", "width": 1}, {"from": "say", "to": "antonioguterre", "width": 1}, {"from": "say", "to": "bringbackourleader", "width": 1}, {"from": "say", "to": "control", "width": 2}, {"from": "say", "to": "freesoutherncameroon", "width": 1}, {"from": "say", "to": "homeland", "width": 1}, {"from": "say", "to": "httpst", "width": 5}, {"from": "say", "to": "misunderstood", "width": 2}, {"from": "say", "to": "presentation", "width": 1}, {"from": "say", "to": "restorationnow", "width": 1}, {"from": "say", "to": "sir", "width": 1}, {"from": "say", "to": "sisikuayuktabe", "width": 1}, {"from": "take", "to": "community", "width": 1}, {"from": "take", "to": "datum", "width": 1}, {"from": "take", "to": "freesoutherncameroon", "width": 5}, {"from": "take", "to": "hostage", "width": 1}, {"from": "take", "to": "parktown", "width": 1}, {"from": "take", "to": "path", "width": 1}, {"from": "take", "to": "people", "width": 1}, {"from": "take", "to": "power", "width": 1}, {"from": "take", "to": "rubbish", "width": 1}, {"from": "take", "to": "side", "width": 1}, {"from": "take", "to": "war", "width": 1}, {"from": "u", "to": "bury", "width": 2}, {"from": "u", "to": "cotbdgdfxxya", "width": 2}, {"from": "u", "to": "fear", "width": 1}, {"from": "u", "to": "feel", "width": 1}, {"from": "u", "to": "fight", "width": 1}, {"from": "u", "to": "govern", "width": 2}, {"from": "u", "to": "hope", "width": 1}, {"from": "u", "to": "kill", "width": 1}, {"from": "u", "to": "question", "width": 1}, {"from": "u", "to": "refer", "width": 2}, {"from": "u", "to": "suggest", "width": 1}, {"from": "cameroon", "to": "add", "width": 2}, {"from": "cameroon", "to": "bring", "width": 1}, {"from": "cameroon", "to": "freedomfreedomfreedomweneed", "width": 1}, {"from": "cameroon", "to": "hand", "width": 1}, {"from": "cameroon", "to": "lend", "width": 1}, {"from": "cameroon", "to": "propose", "width": 1}, {"from": "cameroon", "to": "realize", "width": 2}, {"from": "cameroon", "to": "ree", "width": 2}, {"from": "cameroon", "to": "say", "width": 1}, {"from": "cameroon", "to": "strugglecontinue", "width": 1}, {"from": "cameroon", "to": "understand", "width": 2}, {"from": "paulbiya", "to": "accept", "width": 1}, {"from": "paulbiya", "to": "antonioguterre", "width": 1}, {"from": "paulbiya", "to": "ask", "width": 1}, {"from": "paulbiya", "to": "bring", "width": 1}, {"from": "paulbiya", "to": "equip", "width": 1}, {"from": "paulbiya", "to": "freeallarreste", "width": 1}, {"from": "paulbiya", "to": "freesoutherncameroon", "width": 1}, {"from": "paulbiya", "to": "protect", "width": 1}, {"from": "paulbiya", "to": "stop", "width": 1}, {"from": "paulbiya", "to": "take", "width": 1}, {"from": "go", "to": "ajstream", "width": 1}, {"from": "go", "to": "ambazonia", "width": 2}, {"from": "go", "to": "biya", "width": 1}, {"from": "go", "to": "bringbackourinternet", "width": 1}, {"from": "go", "to": "cameroon", "width": 2}, {"from": "go", "to": "commonwealthsec", "width": 1}, {"from": "go", "to": "httpst", "width": 1}, {"from": "go", "to": "paubiya", "width": 1}, {"from": "go", "to": "people", "width": 1}, {"from": "go", "to": "statue", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"springLength": 100, "springConstant": 0.085, "damping": 0.41, "avoidOverlap": 1}, "minVelocity": 0.75, "solver": "forceAtlas2Based"}, "nodes": {"font": {"size": 40, "face": "verdana"}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
