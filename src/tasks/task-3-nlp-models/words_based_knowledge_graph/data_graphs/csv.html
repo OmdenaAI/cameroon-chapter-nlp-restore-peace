@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "freedom", "label": "freedom", "shape": "dot"}, {"color": "#97c2fc", "id": "httpst", "label": "httpst", "shape": "dot"}, {"color": "#97c2fc", "id": "rise", "label": "rise", "shape": "dot"}, {"color": "#97c2fc", "id": "want", "label": "want", "shape": "dot"}, {"color": "#97c2fc", "id": "dadatweak", "label": "dadatweak", "shape": "dot"}, {"color": "#97c2fc", "id": "struggle", "label": "struggle", "shape": "dot"}, {"color": "#97c2fc", "id": "bless", "label": "bless", "shape": "dot"}, {"color": "#97c2fc", "id": "restore", "label": "restore", "shape": "dot"}, {"color": "#97c2fc", "id": "un", "label": "un", "shape": "dot"}, {"color": "#97c2fc", "id": "watch", "label": "watch", "shape": "dot"}, {"color": "#97c2fc", "id": "irinnews", "label": "irinnews", "shape": "dot"}, {"color": "#97c2fc", "id": "excite", "label": "excite", "shape": "dot"}, {"color": "#97c2fc", "id": "ambazonia", "label": "ambazonia", "shape": "dot"}, {"color": "#97c2fc", "id": "pay", "label": "pay", "shape": "dot"}, {"color": "#97c2fc", "id": "shiyoutoshiteiru", "label": "shiyoutoshiteiru", "shape": "dot"}, {"color": "#97c2fc", "id": "Li", "label": "Li", "shape": "dot"}, {"color": "#97c2fc", "id": "put", "label": "put", "shape": "dot"}, {"color": "#97c2fc", "id": "u", "label": "u", "shape": "dot"}, {"color": "#97c2fc", "id": "course", "label": "course", "shape": "dot"}, {"color": "#97c2fc", "id": "die", "label": "die", "shape": "dot"}, {"color": "#97c2fc", "id": "shamy", "label": "shamy", "shape": "dot"}, {"color": "#97c2fc", "id": "rnkwenchi", "label": "rnkwenchi", "shape": "dot"}, {"color": "#97c2fc", "id": "other", "label": "other", "shape": "dot"}, {"color": "#97c2fc", "id": "remain", "label": "remain", "shape": "dot"}, {"color": "#97c2fc", "id": "fight", "label": "fight", "shape": "dot"}, {"color": "#97c2fc", "id": "nigeria", "label": "nigeria", "shape": "dot"}, {"color": "#97c2fc", "id": "mais", "label": "mais", "shape": "dot"}, {"color": "#97c2fc", "id": "lns", "label": "lns", "shape": "dot"}, {"color": "#97c2fc", "id": "god", "label": "god", "shape": "dot"}, {"color": "#97c2fc", "id": "english", "label": "english", "shape": "dot"}, {"color": "#97c2fc", "id": "ce", "label": "ce", "shape": "dot"}, {"color": "#97c2fc", "id": "bafoussam", "label": "bafoussam", "shape": "dot"}, {"color": "#97c2fc", "id": "cameroon", "label": "cameroon", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "want", "to": "freedom", "width": 1}, {"from": "want", "to": "httpst", "width": 2}, {"from": "want", "to": "rise", "width": 5}, {"from": "bless", "to": "dadatweak", "width": 1}, {"from": "bless", "to": "httpst", "width": 2}, {"from": "bless", "to": "struggle", "width": 1}, {"from": "un", "to": "restore", "width": 1}, {"from": "un", "to": "want", "width": 1}, {"from": "irinnews", "to": "want", "width": 2}, {"from": "irinnews", "to": "watch", "width": 1}, {"from": "ambazonia", "to": "excite", "width": 1}, {"from": "ambazonia", "to": "struggle", "width": 1}, {"from": "pay", "to": "ambazonia", "width": 2}, {"from": "pay", "to": "httpst", "width": 2}, {"from": "Li", "to": "shiyoutoshiteiru", "width": 1}, {"from": "put", "to": "httpst", "width": 1}, {"from": "u", "to": "put", "width": 1}, {"from": "struggle", "to": "course", "width": 1}, {"from": "shiyoutoshiteiru", "to": "rise", "width": 1}, {"from": "shamy", "to": "die", "width": 1}, {"from": "rnkwenchi", "to": "bless", "width": 1}, {"from": "restore", "to": "other", "width": 1}, {"from": "remain", "to": "httpst", "width": 1}, {"from": "nigeria", "to": "fight", "width": 2}, {"from": "mais", "to": "pay", "width": 1}, {"from": "lns", "to": "remain", "width": 1}, {"from": "god", "to": "bless", "width": 3}, {"from": "fight", "to": "ambazonia", "width": 2}, {"from": "excite", "to": "course", "width": 1}, {"from": "english", "to": "want", "width": 5}, {"from": "die", "to": "httpst", "width": 1}, {"from": "ce", "to": "pay", "width": 2}, {"from": "bafoussam", "to": "pay", "width": 1}, {"from": "watch", "to": "cameroon", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"springLength": 100, "springConstant": 0.085, "damping": 0.41, "avoidOverlap": 1}, "minVelocity": 0.75, "solver": "forceAtlas2Based"}, "nodes": {"font": {"size": 40, "face": "verdana"}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
