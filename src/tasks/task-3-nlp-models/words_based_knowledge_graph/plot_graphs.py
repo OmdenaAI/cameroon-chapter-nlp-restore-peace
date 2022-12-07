@@ -11,24 +11,29 @@ def softmax(x):
 def get_softmax_norm(x, slope=1.0, scale=200):                     
     return scale*softmax(np.log(x) + 1.0)
 
-def create_graph(df, edges_norm=False, min_degree_node=None):
-    net = Network()
+def create_graph(df, edges_norm=False, min_degree_node=None, show_in_notebook=False):
+    if show_in_notebook:
+        net = Network(notebook=True)
+    else:
+        net = Network()
     
     df = df.groupby(['src', 'dst']).sum()
-    display(df.head())
+    #print(df.shape)
+    #display(df.head())
     list_index = list(dict(df.index).keys())    
     if min_degree_node is not None:
         series_count_src = df.reset_index()['src'].value_counts()
         list_index = series_count_src[series_count_src >= min_degree_node].index
+        if len(list_index) == 0:
+            print('No nodes to show, reduce the node degree!!')
             
     if edges_norm:
         df['edge_norm'] =  get_softmax_norm(df['edge'])
-        
-    print('lenght src nodes:', len(list_index), 'min_degree_node:', min_degree_node)
+
+    #print('lenght src nodes:', len(list_index), 'min_degree_node:', min_degree_node)
     print(df.shape)
         
     for index in list_index:            
-        #print(index)
         df_graph_plot = df.loc[index].reset_index()
         df_graph_plot['src'] = index
         net.add_nodes(list(df_graph_plot['dst'].values) + [df_graph_plot['src'].iloc[0]])
@@ -39,8 +44,8 @@ def create_graph(df, edges_norm=False, min_degree_node=None):
 
     return net
 
-def plot_graph(net, name_file):
-    net.toggle_physics(True)
+def plot_graph(net, name_file, show_in_notebook=False):
+    net.toggle_physics(True)    
     net.set_options("""
     const options = {
       "physics": {
@@ -60,6 +65,9 @@ def plot_graph(net, name_file):
         }    
       }
     }
-    """)
+    """)    
     # net.show_buttons(filter_=['nodes'])
-    net.show(name_file+'.html')
+    if show_in_notebook:
+        display(net.show(name_file+'.html'))
+    else:
+        net.show(name_file+'.html')
