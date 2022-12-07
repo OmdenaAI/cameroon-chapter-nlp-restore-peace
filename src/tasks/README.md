@@ -14,5 +14,5 @@ Note : Please Follow the below guidelines to create task folders
 |1|Scrapping from Websites | Posts concerning and related to our tasks were scrapped from some websites and and collected in a csv file|
 |2|Preprocessing scraped data | Data scarped from the internet will be prepared for machine learning and the final result will be stored as a CSV file|
 |3|Natural Language Models | Models based on NLP techniques such as: topic classifier/modeling, sentiment analysis, entity recognition, knowledge graph, network analysis, etc|
-|4|Visualization and Dashboard|         |
+|4|Visualization and Dashboard| A graphical representation of research results, easy to understand and interpret|
 |5|Political Rationale| The entire basis of the political rationale is to create a document upon which we could use as a basis to know if the direction of our current application is viable or not|
